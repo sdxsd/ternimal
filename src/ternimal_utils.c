@@ -26,11 +26,12 @@ A program is free software if users have all of these freedoms.
 */
 
 #include "../includes/ternimal.h"
+#include <fcntl.h>
 
 // Initialises a new ternimal using the default parameters defined in ternimal.h
 ternimal_struct *new_ternimal(void) {
-	size_t max_name = 255;
-	ternimal_struct *ternimal_new;
+	size_t 			max_name = 255;
+	ternimal_struct	*ternimal_new;
 
 	ternimal_new = malloc(sizeof(ternimal_struct));
 	ternimal_new -> hunger = DEFAULT_HUNGER;
@@ -47,8 +48,30 @@ ternimal_struct *new_ternimal(void) {
 	return (ternimal_new);
 }
 
+int print_art(char *art_file) {
+	FILE	*fp = fopen(art_file, "r");
+	size_t 	bufsize = 1024;
+	char	*buf;
+
+	if (!art_file)
+		return (-1);
+	if (!fp) {
+		perror(DEFAULT_ERROR);
+		printf("Does your ternimals artfile exist?\n");
+		return (-1);
+	}
+	while(getline(&buf, &bufsize, fp)) {
+		printf("%s", buf);
+		free(buf);
+	}
+	return (0);
+}
+
 // Prints the current stats of the ternimal.
 void print_ternimal_data(ternimal_struct *ternimal) {
+	if (!print_art(ternimal -> art_file)) {
+		printf("ERROR: Art file potentially not valid...\n");
+	}
 	printf("Name:      %s", ternimal -> name);
 	printf("Hunger:    %d\n", ternimal -> hunger);
 	printf("Health:    %d\n", ternimal -> health);
@@ -61,7 +84,7 @@ void print_ternimal_data(ternimal_struct *ternimal) {
 
 // Checks the date of the last login, vs the date of the current login, and determines
 // the amount of hours passed, increasing hunger, and deducting stats accordingly.
-void ternimal_time_update(ternimal_struct *ternimal) {
+unsigned int ternimal_time_update(ternimal_struct *ternimal) {
 	unsigned int	hours_passed = 0;
 	unsigned int	difference;
 	time_t			current_time;
@@ -73,6 +96,11 @@ void ternimal_time_update(ternimal_struct *ternimal) {
 		difference -= HOUR;
 	}
 	printf("You last logged in %u hours ago!\n", hours_passed);
+	ternimal -> last_login = current_time;
+	return (hours_passed);
+}
+
+void update_ternimal(ternimal_struct *ternimal, unsigned int hours_passed) {
 	for (; hours_passed > 0; hours_passed--) {
 		ternimal -> hunger += 8;
 		if (ternimal -> hunger > MAX_HUNGER) {
@@ -82,8 +110,6 @@ void ternimal_time_update(ternimal_struct *ternimal) {
 			ternimal -> love -= 4;
 			ternimal -> hunger = MAX_HUNGER;
 		}
-		ternimal_angryletter();
 	}
-	ternimal -> last_login = current_time;
-	return ;
+	return;
 }

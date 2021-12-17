@@ -35,7 +35,12 @@ A program is free software if users have all of these freedoms.
 #include <string.h>
 #include <stdlib.h>
 
-// Defines the amount of seconds within an hour
+#define BUFFER_SIZE 1024
+
+// Error text.
+#define DEFAULT_ERROR "ERROR: "
+
+// Defines the amount of seconds within an hour.
 #define HOUR 7200
 
 // Defines limits for the ternimal's stats and feelings.
@@ -54,20 +59,21 @@ A program is free software if users have all of these freedoms.
 
 // Basic structure for the ternimal!
 typedef struct ternimal {
-	int hunger,
-		health,
-		size,
-		happiness,
-		love;
-	time_t last_login;
-	char *name;
+	time_t	last_login;
+	char	*name;
+	char	*art_file;
+	short	danger_flag;
+	int 	hunger,
+			health,
+			size,
+			happiness,
+			love;
 } ternimal_struct;
-
 
 // TERNIMAL FUNCTIONS (ternimal_utils.c)
 ternimal_struct *new_ternimal(void);
 void print_ternimal_data(ternimal_struct *ternimal);
-void ternimal_time_update(ternimal_struct *ternimal);
+unsigned int ternimal_time_update(ternimal_struct *ternimal);
 
 // DANGER FUNCTIONS (danger.c)
 void ternimal_angryletter(void);
