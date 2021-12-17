@@ -1,5 +1,5 @@
 /*
-THIS FILE IS A PART OF THE TERNIMAL PROGRAM
+TERNIMAL: A creature in your terminal!
 Copyright (C) 2021  Will Maguire
 
 This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,40 @@ The definition of Free Software is as follows:
 
 A program is free software if users have all of these freedoms.
 */
-#include "../includes/ternimal.hpp"
 
-int main(int argc, char *argv[]) {
-	ternimal test = ternimal();
-	std::cout << test.name << std::endl;
-}
+
+// Includes:
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Defines limits for the ternimal's stats and feelings.
+#define MAX_HUNGER 64
+#define MAX_HEALTH 64
+#define MAX_SIZE 255
+#define MAX_HAPPINESS 128
+#define MAX_LOVE 1024
+
+// Default stats and feelings.
+#define DEFAULT_HUNGER 55
+#define DEFAULT_HEALTH 12
+#define DEFAULT_SIZE 12
+#define DEFAULT_HAPPINESS 32
+#define DEFAULT_LOVE 8
+
+// Basic structure for the ternimal!
+typedef struct ternimal {
+	int hunger,
+		health,
+		size,
+		happiness,
+		love;
+	time_t last_login;
+	char *name;
+} ternimal_struct;
+
+ternimal_struct *new_ternimal(void);
+void print_ternimal_data(ternimal_struct *ternimal);
+void ternimal_time_update(ternimal_struct *ternimal);
