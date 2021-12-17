@@ -1,5 +1,5 @@
 /*
-TERNIMAL: A creature in your terminal!
+THIS FILE IS A PART OF THE TERNIMAL PROGRAM
 Copyright (C) 2021  Will Maguire
 
 This program is free software: you can redistribute it and/or modify
@@ -25,13 +25,15 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-
 // Includes:
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+
+// Defines the amount of seconds within an hour
+#define HOUR 7200
 
 // Defines limits for the ternimal's stats and feelings.
 #define MAX_HUNGER 64
@@ -58,6 +60,8 @@ typedef struct ternimal {
 	char *name;
 } ternimal_struct;
 
+
+// TERNIMAL FUNCTIONS
 ternimal_struct *new_ternimal(void);
 void print_ternimal_data(ternimal_struct *ternimal);
 void ternimal_time_update(ternimal_struct *ternimal);

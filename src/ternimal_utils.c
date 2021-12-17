@@ -27,6 +27,7 @@ A program is free software if users have all of these freedoms.
 
 #include "../includes/ternimal.h"
 
+// Initialises a new ternimal using the default parameters defined in ternimal.h
 ternimal_struct *new_ternimal(void) {
 	size_t max_name = 255;
 	ternimal_struct *ternimal_new;
@@ -41,11 +42,12 @@ ternimal_struct *new_ternimal(void) {
 
 	printf("(MAX 255) Enter a name for your ternimal!\n::> ");
 	getline(&(ternimal_new -> name), &max_name, stdin);
-	printf("New ternimal name: %s\n", ternimal_new -> name);
+	printf("New ternimal name: %s", ternimal_new -> name);
 
 	return (ternimal_new);
 }
 
+// Prints the current stats of the ternimal.
 void print_ternimal_data(ternimal_struct *ternimal) {
 	printf("Name: %s", ternimal -> name);
 	printf("Hunger:    %d\n", ternimal -> hunger);
@@ -57,12 +59,29 @@ void print_ternimal_data(ternimal_struct *ternimal) {
 	return;
 }
 
+// Checks the date of the last login, vs the date of the current login, and determines
+// the amount of hours passed, increasing hunger, and deducting stats accordingly.
 void ternimal_time_update(ternimal_struct *ternimal) {
-	time_t current_time;
+	unsigned int	hours_passed = 0;
+	unsigned int	difference;
+	time_t			current_time;
 
 	time(&current_time);
-	if ((current_time - ternimal -> last_login) > 10) {
-		printf("Why did you abandon me?\n");
+	difference = (current_time - ternimal -> last_login);
+	while (difference > 7200) {
+		hours_passed++;
+		difference -= 7200;
+	}
+	printf("You last logged in %u hours ago!\n", hours_passed);
+	for (; hours_passed > 0; hours_passed--) {
+		ternimal -> hunger += 8;
+		if (ternimal -> hunger > MAX_HUNGER) {
+			ternimal -> health -= 2;
+			ternimal -> size--;
+			ternimal -> happiness -= 3;
+			ternimal -> love -= 4;
+			ternimal -> hunger = MAX_HUNGER;
+		}
 	}
 	ternimal -> last_login = current_time;
 	return ;
