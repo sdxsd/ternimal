@@ -49,7 +49,7 @@ ternimal_struct *new_ternimal(void) {
 
 // Prints the current stats of the ternimal.
 void print_ternimal_data(ternimal_struct *ternimal) {
-	printf("Name: %s", ternimal -> name);
+	printf("Name:      %s", ternimal -> name);
 	printf("Hunger:    %d\n", ternimal -> hunger);
 	printf("Health:    %d\n", ternimal -> health);
 	printf("Size:      %d\n", ternimal -> size);
@@ -68,9 +68,9 @@ void ternimal_time_update(ternimal_struct *ternimal) {
 
 	time(&current_time);
 	difference = (current_time - ternimal -> last_login);
-	while (difference > 7200) {
+	while (difference > HOUR) {
 		hours_passed++;
-		difference -= 7200;
+		difference -= HOUR;
 	}
 	printf("You last logged in %u hours ago!\n", hours_passed);
 	for (; hours_passed > 0; hours_passed--) {
@@ -82,6 +82,7 @@ void ternimal_time_update(ternimal_struct *ternimal) {
 			ternimal -> love -= 4;
 			ternimal -> hunger = MAX_HUNGER;
 		}
+		ternimal_angryletter();
 	}
 	ternimal -> last_login = current_time;
 	return ;

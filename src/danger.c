@@ -25,51 +25,15 @@ The definition of Free Software is as follows:
 A program is free software if users have all of these freedoms.
 */
 
-#ifndef TERNIMAL_H
-# define TERNIMAL_H
+#include "../includes/ternimal.h"
+#include <fcntl.h>
 
-// Includes:
-#include <stdio.h>
-#include <time.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
+void ternimal_angryletter(void) {
+	char	*file_path = getenv("HOME");
+	int		fd;
 
-// Defines the amount of seconds within an hour
-#define HOUR 7200
-
-// Defines limits for the ternimal's stats and feelings.
-#define MAX_HUNGER 64
-#define MAX_HEALTH 64
-#define MAX_SIZE 255
-#define MAX_HAPPINESS 128
-#define MAX_LOVE 1024
-
-// Default stats and feelings.
-#define DEFAULT_HUNGER 55
-#define DEFAULT_HEALTH 12
-#define DEFAULT_SIZE 12
-#define DEFAULT_HAPPINESS 32
-#define DEFAULT_LOVE 8
-
-// Basic structure for the ternimal!
-typedef struct ternimal {
-	int hunger,
-		health,
-		size,
-		happiness,
-		love;
-	time_t last_login;
-	char *name;
-} ternimal_struct;
-
-
-// TERNIMAL FUNCTIONS (ternimal_utils.c)
-ternimal_struct *new_ternimal(void);
-void print_ternimal_data(ternimal_struct *ternimal);
-void ternimal_time_update(ternimal_struct *ternimal);
-
-// DANGER FUNCTIONS (danger.c)
-void ternimal_angryletter(void);
-
-#endif // TERNIMAL_H
+	strcat(file_path, "/letter_for_you.txt");
+	fd = open(file_path, O_CREAT | O_WRONLY);
+	write(fd, "Feed me!", 9);
+	close(fd);
+}
