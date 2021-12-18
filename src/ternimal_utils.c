@@ -28,10 +28,24 @@ A program is free software if users have all of these freedoms.
 #include "../includes/ternimal.h"
 #include <fcntl.h>
 
+// Defines the path to the file containing the ternimal's art.
+char *set_ascii(void) {
+	size_t	buf_size = 0;
+	char	*buf = NULL;
+
+	printf("Enter the full filepath to your ascii art file\n(or enter for default)\n::> ");
+	getline(&buf, &buf_size, stdin);
+	if (strcmp(buf, "\n")) {
+		buf[strlen(buf) - 1] = '\0';
+		return (buf);
+	}
+	else
+		return (strcat(getenv("HOME"), DEFAULT_ART_PATH));
+}
 // Initialises a new ternimal using the default parameters defined in ternimal.h
 ternimal_struct *new_ternimal(void) {
-	size_t 			max_name = 255;
 	ternimal_struct	*ternimal_new;
+	size_t name_size = 0;
 
 	ternimal_new = malloc(sizeof(ternimal_struct));
 	ternimal_new -> hunger = DEFAULT_HUNGER;
@@ -42,17 +56,12 @@ ternimal_struct *new_ternimal(void) {
 	ternimal_new -> last_login = time(NULL);
 
 	printf("(MAX 255) Enter a name for your ternimal!\n::> ");
-	getline(&(ternimal_new -> name), &max_name, stdin);
+	getline(&(ternimal_new -> name), &name_size, stdin);
 	printf("New ternimal name: %s", ternimal_new -> name);
 
-	printf("Enter the full filepath to your ascii art file\n(or enter for default)\n::> ");
-	getline(&(ternimal_new -> art_file), &max_name, stdin);
-	if (strcmp(ternimal_new -> art_file, "\n")) {
-		ternimal_new -> art_file[strlen(ternimal_new -> art_file) - 1] = '\0';
-		printf("Filepath: %s\n", ternimal_new -> art_file);
-	}
-	else
-		ternimal_new -> art_file = strcat(getenv("HOME"), DEFAULT_ART_PATH);
+	ternimal_new -> art_file = set_ascii();
+	printf("File path: %s", ternimal_new -> art_file);
+
 	return (ternimal_new);
 }
 
@@ -68,16 +77,18 @@ int print_art(char *art_file) {
 		printf("Does your ternimals artfile exist?\n");
 		return (-1);
 	}
-	while(getline(&buf, &bufsize, fp) >= 0) {
+	while(getline(&buf, &bufsize, fp) >= 0)
 		printf("%s", buf);
-	}
 	return (1);
 }
 
 // Prints the current stats of the ternimal.
 void print_ternimal_data(ternimal_struct *ternimal) {
-	if (!print_art(ternimal -> art_file)) {
+	while (!print_art(ternimal -> art_file)) {
 		printf("ERROR: Art file potentially not valid...\n");
+		if (ternimal -> art_file)
+			free(ternimal -> art_file);
+		ternimal -> art_file = set_ascii();
 	}
 	printf("Name:      %s", ternimal -> name);
 	printf("Hunger:    %d\n", ternimal -> hunger);
