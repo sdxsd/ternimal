@@ -35,6 +35,12 @@ A program is free software if users have all of these freedoms.
 #include <string.h>
 #include <stdlib.h>
 
+#define DEFAULT_ART_PATH "/.ternimal_art/cat.txt"
+// TRUE and FALSE booleans.
+#define TRUE 1
+#define FALSE 0
+
+// Defines default buffer size.
 #define BUFFER_SIZE 1024
 
 // Error text.
@@ -74,6 +80,7 @@ typedef struct ternimal {
 ternimal_struct *new_ternimal(void);
 void print_ternimal_data(ternimal_struct *ternimal);
 unsigned int ternimal_time_update(ternimal_struct *ternimal);
+void ternimal_update(ternimal_struct *ternimal, unsigned int hours_passed);
 
 // DANGER FUNCTIONS (danger.c)
 void ternimal_angryletter(void);

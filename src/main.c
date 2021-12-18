@@ -26,10 +26,10 @@ A program is free software if users have all of these freedoms.
 */
 #include "../includes/ternimal.h"
 
-int main(void) {
+int main(int argc, char *argv[]) {
 	ternimal_struct *ternimal;
 
 	ternimal = new_ternimal();
-	ternimal_time_update(ternimal);
+	ternimal_update(ternimal, ternimal_time_update(ternimal));
 	print_ternimal_data(ternimal);
 }

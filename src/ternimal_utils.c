@@ -45,13 +45,21 @@ ternimal_struct *new_ternimal(void) {
 	getline(&(ternimal_new -> name), &max_name, stdin);
 	printf("New ternimal name: %s", ternimal_new -> name);
 
+	printf("Enter the full filepath to your ascii art file\n(or enter for default)\n::> ");
+	getline(&(ternimal_new -> art_file), &max_name, stdin);
+	if (strcmp(ternimal_new -> art_file, "\n")) {
+		ternimal_new -> art_file[strlen(ternimal_new -> art_file) - 1] = '\0';
+		printf("Filepath: %s\n", ternimal_new -> art_file);
+	}
+	else
+		ternimal_new -> art_file = strcat(getenv("HOME"), DEFAULT_ART_PATH);
 	return (ternimal_new);
 }
 
 int print_art(char *art_file) {
 	FILE	*fp = fopen(art_file, "r");
-	size_t 	bufsize = 1024;
-	char	*buf;
+	size_t 	bufsize = 0;
+	char	*buf = NULL;
 
 	if (!art_file)
 		return (-1);
@@ -60,11 +68,10 @@ int print_art(char *art_file) {
 		printf("Does your ternimals artfile exist?\n");
 		return (-1);
 	}
-	while(getline(&buf, &bufsize, fp)) {
+	while(getline(&buf, &bufsize, fp) >= 0) {
 		printf("%s", buf);
-		free(buf);
 	}
-	return (0);
+	return (1);
 }
 
 // Prints the current stats of the ternimal.
@@ -100,7 +107,7 @@ unsigned int ternimal_time_update(ternimal_struct *ternimal) {
 	return (hours_passed);
 }
 
-void update_ternimal(ternimal_struct *ternimal, unsigned int hours_passed) {
+void ternimal_update(ternimal_struct *ternimal, unsigned int hours_passed) {
 	for (; hours_passed > 0; hours_passed--) {
 		ternimal -> hunger += 8;
 		if (ternimal -> hunger > MAX_HUNGER) {

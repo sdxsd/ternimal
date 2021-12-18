@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -o
+CFLAGS = -g -o
 NAME = ternimal
 
 all: $(NAME)
