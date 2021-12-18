@@ -45,7 +45,7 @@ char *set_ascii(void) {
 // Initialises a new ternimal using the default parameters defined in ternimal.h
 ternimal_struct *new_ternimal(void) {
 	ternimal_struct	*ternimal_new;
-	size_t name_size = 0;
+	size_t 			name_size = 0;
 
 	ternimal_new = malloc(sizeof(ternimal_struct));
 	ternimal_new -> hunger = DEFAULT_HUNGER;
@@ -60,11 +60,12 @@ ternimal_struct *new_ternimal(void) {
 	printf("New ternimal name: %s", ternimal_new -> name);
 
 	ternimal_new -> art_file = set_ascii();
-	printf("File path: %s", ternimal_new -> art_file);
+	printf("File path: %s\n", ternimal_new -> art_file);
 
 	return (ternimal_new);
 }
 
+// Prints the ascii art defined as the art for the ternimal.
 int print_art(char *art_file) {
 	FILE	*fp = fopen(art_file, "r");
 	size_t 	bufsize = 0;
@@ -77,8 +78,11 @@ int print_art(char *art_file) {
 		printf("Does your ternimals artfile exist?\n");
 		return (-1);
 	}
-	while(getline(&buf, &bufsize, fp) >= 0)
+	while (getline(&buf, &bufsize, fp) >= 0) {
 		printf("%s", buf);
+		if (buf)
+			free(buf);
+	}
 	return (1);
 }
 
@@ -101,7 +105,7 @@ void print_ternimal_data(ternimal_struct *ternimal) {
 }
 
 // Checks the date of the last login, vs the date of the current login, and determines
-// the amount of hours passed, increasing hunger, and deducting stats accordingly.
+// the amount of hours passed.
 unsigned int ternimal_time_update(ternimal_struct *ternimal) {
 	unsigned int	hours_passed = 0;
 	unsigned int	difference;
@@ -118,8 +122,13 @@ unsigned int ternimal_time_update(ternimal_struct *ternimal) {
 	return (hours_passed);
 }
 
+// Updates the stats of the ternimal based on the amount of hours passed.
 void ternimal_update(ternimal_struct *ternimal, unsigned int hours_passed) {
-	for (; hours_passed > 0; hours_passed--) {
+	if (!ternimal) {
+		printf("INVALID TERNIMAL PASSED\n");
+		return;
+	}
+	while (hours_passed --> 0) {
 		ternimal -> hunger += 8;
 		if (ternimal -> hunger > MAX_HUNGER) {
 			ternimal -> health -= 2;
@@ -129,5 +138,4 @@ void ternimal_update(ternimal_struct *ternimal, unsigned int hours_passed) {
 			ternimal -> hunger = MAX_HUNGER;
 		}
 	}
-	return;
 }
